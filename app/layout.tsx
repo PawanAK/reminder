@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import NavBar from "./../components/NabBar";
 import { Separator } from "@radix-ui/react-context-menu";
+import ThemeProvider from "@/providers/ThemeProvider";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,14 +21,21 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <div
-            className="flex min-h-screen w-full flex-col
+      <html
+        lang="en"
+        className={cn(inter.className, "dark")}
+        style={{
+          colorScheme: "dark",
+        }}>
+        <body>
+          <ThemeProvider>
+            <div
+              className="flex min-h-screen w-full flex-col
           items-center">
-            <NavBar />
-            {children}
-          </div>
+              <NavBar />
+              {children}
+            </div>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
