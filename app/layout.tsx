@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import NavBar from "./../components/NabBar";
+import { Separator } from "@radix-ui/react-context-menu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,6 @@ export default function RootLayout({
             className="flex min-h-screen w-full flex-col
           items-center">
             <NavBar />
-            <Separator />
             {children}
           </div>
         </body>
