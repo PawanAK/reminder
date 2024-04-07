@@ -73,8 +73,10 @@ const CollectionList = async () => {
 
   return (
     <div>
-      Collections:{collections.length}
       <CreateCollectionBtn />
+      {collections.map((collection) => (
+        <CollectionCard key={collection.id} collection={collection} />
+      ))}
     </div>
   );
 };

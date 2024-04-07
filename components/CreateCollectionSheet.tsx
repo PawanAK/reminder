@@ -81,7 +81,7 @@ function CreateCollectionSheet({ open, onOpenChange }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={openChangeWrapper}>
-      <SheetContent>
+      <SheetContent> 
         <SheetHeader>
           <SheetTitle>Add new collection</SheetTitle>
           <SheetDescription>
