@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { CollectionColor, CollectionColors } from "@/lib/constants";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { Progress } from "./ui/progress";
+import { Separator } from "./ui/separator";
 
 interface Props {
   collection: Collection;
@@ -43,13 +44,20 @@ const CollectionCard = ({ collection }: Props) => {
         {tasks.length > 0 && (
           <>
             <Progress className="rounded-none" value={45} />
-            <div>
+            <div className="p-4 gap-3 flex flex-col ">
               {tasks.map((task) => (
                 <div>Mocked Task</div>
               ))}
             </div>
           </>
         )}
+        <Separator />
+        <footer className="h-[40px] px-4 p-[2x] text-xs text-neutral-500 flex justify-between items-center">
+          <p>Created at {collection.createdAt.toLocaleDateString("en-US")}</p>
+          <div className="">
+            <Button></Button>
+          </div>
+        </footer>
       </CollapsibleContent>
     </Collapsible>
   );
