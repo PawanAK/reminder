@@ -1,3 +1,4 @@
+import CollectionCard from "@/components/CollectionCard";
 import CreateCollectionBtn from "@/components/CreateCollectionBtn";
 import SadFace from "@/components/icons/SadFace";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
