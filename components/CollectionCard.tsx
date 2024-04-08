@@ -10,9 +10,23 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { CollectionColor, CollectionColors } from "@/lib/constants";
-import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
+import { CaretDownIcon, CaretUpIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Progress } from "./ui/progress";
 import { Separator } from "./ui/separator";
+import PlusIcon from "./icons/PlusIcon";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogDescription,
+} from "./ui/alert-dialog";
+import { Alert } from "./ui/alert";
+import { deleteCollection } from "@/actions/collection";
+import { toast } from "./ui/use-toast";
 
 interface Props {
   collection: Collection;
@@ -22,6 +36,22 @@ const tasks: string[] = ["Task 1", "Task 2", "Task 3", "Task 4", "Task 5"];
 
 const CollectionCard = ({ collection }: Props) => {
   const [isOpen, setIsOpen] = useState(true);
+
+  const removeCollection = async () => {
+    try {
+      await deleteCollection(collection.id);
+      toast({
+        title: "Success",
+        description: "Collection deleted successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "An error occurred while deleting the collection",
+      });
+    }
+  };
 
   return (
     <Collapsible open={isOpen} onChange={setIsOpen}>
@@ -55,7 +85,27 @@ const CollectionCard = ({ collection }: Props) => {
         <footer className="h-[40px] px-4 p-[2x] text-xs text-neutral-500 flex justify-between items-center">
           <p>Created at {collection.createdAt.toLocaleDateString("en-US")}</p>
           <div className="">
-            <Button></Button>
+            <Button size={"icon"} variant={"ghost"}>
+              <PlusIcon />
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size={"icon"} variant={"ghost"}>
+                  <TrashIcon />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogTitle> Are absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone .This will permanently delete
+                  your collection and all tasks inside it
+                </AlertDialogDescription>
+                <AlertDialogFooter>
+                  <AlertDialogCancel> Cancel </AlertDialogCancel>
+                  <AlertDialogAction> Proceed </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </footer>
       </CollapsibleContent>
