@@ -6,8 +6,9 @@ import { currentUser } from "@clerk/nextjs";
 
 export async function createCollection(form: createCollectionSchemaType) {
   const user = await currentUser();
+
   if (!user) {
-    throw new Error("You must be logged in to create a collection");
+    throw new Error("user not found");
   }
 
   return await prisma.collection.create({
@@ -22,11 +23,12 @@ export async function createCollection(form: createCollectionSchemaType) {
 export async function deleteCollection(id: number) {
   const user = await currentUser();
   if (!user) {
-    throw new Error("You must be logged in to create a collection");
+    throw new Error("user not found");
   }
 
   return await prisma.collection.delete({
     where: {
+      id: id,
       userId: user.id,
     },
   });
