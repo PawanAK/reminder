@@ -28,7 +28,6 @@ import { Alert } from "./ui/alert";
 import { deleteCollection } from "@/actions/collection";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
-import { Collection } from "@prisma/client";
 import CreateTaskDialog from "./CreateTaskDialog";
 
 interface Props {
@@ -68,7 +67,7 @@ const CollectionCard = ({ collection }: Props) => {
       <CreateTaskDialog
         open={showCreateModel}
         setOpen={setShowCreateModel}
-        Collection={collection}
+        collection={collection}
       />
       <Collapsible open={isOpen} onChange={setIsOpen}>
         <CollapsibleTrigger asChild>

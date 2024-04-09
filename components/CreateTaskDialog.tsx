@@ -11,6 +11,9 @@ import {
 } from "./ui/dialog";
 import { CollectionColors, CollectionColor } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { useForm } from "react-hook-form";
+import { createTaskSchema, createTaskSchemaType } from "@/schema/createTask";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   open: boolean;
@@ -19,6 +22,12 @@ interface Props {
 }
 
 const CreateTaskDialog = ({ open, collection, setOpen }: Props) => {
+  const form = useForm<createTaskSchemaType>({
+    resolver: zodResolver(createTaskSchema),
+    defaultValues: {
+      collectionId: collection.id,
+    },
+  });
   const openChangeWrapper = (value: boolean) => {
     setOpen(value);
   };
