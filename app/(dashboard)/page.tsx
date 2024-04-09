@@ -49,9 +49,12 @@ const WelcomeMsgFallback = () => {
   );
 };
 
-const CollectionList = async () => {
+async function CollectionList() {
   const user = await currentUser();
   const collections = await prisma.collection.findMany({
+    include: {
+      tasks: true,
+    },
     where: {
       userId: user?.id,
     },
@@ -82,4 +85,4 @@ const CollectionList = async () => {
       </div>
     </>
   );
-};
+}
