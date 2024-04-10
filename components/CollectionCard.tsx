@@ -1,7 +1,6 @@
-/* eslint-disable react/jsx-key */
 "use client";
 import { Collection, Task } from "@prisma/client";
-import React, { startTransition, useState, useTransition } from "react";
+import React, { useMemo, useState, useTransition } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -19,12 +18,11 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogDescription,
 } from "./ui/alert-dialog";
-import { Alert } from "./ui/alert";
 import { deleteCollection } from "@/actions/collection";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -37,14 +35,15 @@ interface Props {
   };
 }
 
-const CollectionCard = ({ collection }: Props) => {
+function CollectionCard({ collection }: Props) {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
   const tasks = collection.tasks;
 
-  const [showCreateModel, setShowCreateModel] = useState(false);
-  const [isLoading, setIsLoading] = useTransition();
+  const [isLoading, startTransition] = useTransition();
 
   const removeCollection = async () => {
     try {
@@ -63,14 +62,23 @@ const CollectionCard = ({ collection }: Props) => {
     }
   };
 
+  const tasksDone = useMemo(() => {
+    return collection.tasks.filter((task) => task.done).length;
+  }, [collection.tasks]);
+
+  const totalTasks = collection.tasks.length;
+
+  const progress = totalTasks === 0 ? 0 : (tasksDone / totalTasks) * 100;
+
   return (
     <>
       <CreateTaskDialog
-        open={showCreateModel}
-        setOpen={setShowCreateModel}
+        open={showCreateModal}
+        setOpen={setShowCreateModal}
         collection={collection}
       />
-      <Collapsible open={isOpen} onChange={setIsOpen}>
+
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <Button
             variant={"ghost"}
@@ -80,7 +88,6 @@ const CollectionCard = ({ collection }: Props) => {
               CollectionColors[collection.color as CollectionColor]
             )}>
             <span className="text-white font-bold">{collection.name}</span>
-
             {!isOpen && <CaretDownIcon className="h-6 w-6" />}
             {isOpen && <CaretUpIcon className="h-6 w-6" />}
           </Button>
@@ -90,11 +97,11 @@ const CollectionCard = ({ collection }: Props) => {
             <Button
               variant={"ghost"}
               className="flex items-center justify-center gap-1 p-8 py-12 rounded-none"
-              onClick={() => setShowCreateModel(true)}>
+              onClick={() => setShowCreateModal(true)}>
               <p>There are no tasks yet:</p>
               <span
                 className={cn(
-                  "text-sm bg-cip-text text-transparent",
+                  "text-sm bg-clip-text text-transparent",
                   CollectionColors[collection.color as CollectionColor]
                 )}>
                 Create one
@@ -103,8 +110,8 @@ const CollectionCard = ({ collection }: Props) => {
           )}
           {tasks.length > 0 && (
             <>
-              <Progress className="rounded-none" value={45} />
-              <div className="p-4 gap-3 flex flex-col ">
+              <Progress className="rounded-none" value={progress} />
+              <div className="p-4 gap-3 flex flex-col">
                 {tasks.map((task) => (
                   <TaskCard key={task.id} task={task} />
                 ))}
@@ -112,15 +119,15 @@ const CollectionCard = ({ collection }: Props) => {
             </>
           )}
           <Separator />
-          <footer className="h-[40px] px-4 p-[2x] text-xs text-neutral-500 flex justify-between items-center">
+          <footer className="h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center ">
             <p>Created at {collection.createdAt.toLocaleDateString("en-US")}</p>
-            {isLoading && <div>Deleting..</div>}
+            {isLoading && <div>Deleting...</div>}
             {!isLoading && (
               <div>
                 <Button
                   size={"icon"}
                   variant={"ghost"}
-                  onClick={() => setShowCreateModel(true)}>
+                  onClick={() => setShowCreateModal(true)}>
                   <PlusIcon />
                 </Button>
                 <AlertDialog>
@@ -130,13 +137,15 @@ const CollectionCard = ({ collection }: Props) => {
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
-                    <AlertDialogTitle> Are absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone .This will permanently delete
-                      your collection and all tasks inside it
+                      This action cannot be undone. This will permanently delete
+                      your collection and all tasks inside it.
                     </AlertDialogDescription>
                     <AlertDialogFooter>
-                      <AlertDialogCancel> Cancel </AlertDialogCancel>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => {
                           startTransition(removeCollection);
@@ -153,6 +162,6 @@ const CollectionCard = ({ collection }: Props) => {
       </Collapsible>
     </>
   );
-};
+}
 
 export default CollectionCard;
