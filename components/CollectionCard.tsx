@@ -85,13 +85,27 @@ const CollectionCard = ({ collection }: Props) => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex rounded-b-md flex-col dark:bg-neutral-900 shadow-lg">
-          {tasks.length === 0 && <div>No tasks</div>}
+          {tasks.length === 0 && (
+            <Button
+              variant={"ghost"}
+              className="flex items-center justify-center gap-1 p-8 py-12 rounded-none"
+              onClick={() => setShowCreateModel(true)}>
+              <p>There are no tasks yet:</p>
+              <span
+                className={cn(
+                  "text-sm bg-cip-text text-transparent",
+                  CollectionColors[collection.color as CollectionColor]
+                )}>
+                Create one
+              </span>
+            </Button>
+          )}
           {tasks.length > 0 && (
             <>
               <Progress className="rounded-none" value={45} />
               <div className="p-4 gap-3 flex flex-col ">
                 {tasks.map((task) => (
-                  <div key={task.id}>{task.content}</div>
+                  <TaskCard key={task.id} task={task} />
                 ))}
               </div>
             </>
