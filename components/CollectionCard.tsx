@@ -29,6 +29,7 @@ import { deleteCollection } from "@/actions/collection";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import CreateTaskDialog from "./CreateTaskDialog";
+import TaskCard from "./TaskCard";
 
 interface Props {
   collection: Collection & {
