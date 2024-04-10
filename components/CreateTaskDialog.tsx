@@ -140,7 +140,7 @@ const CreateTaskDialog = ({ open, collection, setOpen }: Props) => {
                         <PopoverContent>
                           <Calendar
                             mode="single"
-                            selected={field.name}
+                            selected={new Date(field.name)} // convert string to Date object
                             onSelect={field.onChange}
                             initialFocus
                           />
