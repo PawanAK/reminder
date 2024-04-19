@@ -6,15 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Collection {
-  id  Int  @id @default(autoincrement())
-  name String
-  userId String
-  color String
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    String
+  color     String
   createdAt DateTime @default(now())
 
   tasks Task[]
@@ -22,14 +22,14 @@ model Collection {
   @@unique([name, userId])
 }
 
-model Task{
-  id Int @id @default(autoincrement())
-  content String
-  userId String
-  done Boolean @default(false)
+model Task {
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    String
+  done      Boolean   @default(false)
   expiresAt DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   collectionId Int
-  Collection Collection @relation(fields: [collectionId], references: [id],onDelete: Cascade)
+  Collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 }
